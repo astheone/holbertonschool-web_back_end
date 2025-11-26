@@ -10,16 +10,15 @@ if __name__ == "__main__":
 
     # Total logs
     total_logs = nginx.count_documents({})
-    print("{} logs".format(total_logs))
+    print(f"{total_logs} logs")
 
-    # Methods count
+    # Methods
     print("Methods:")
-    print("\tmethod GET: {}".format(nginx.count_documents({"method": "GET"})))
-    print("\tmethod POST: {}".format(nginx.count_documents({"method": "POST"})))
-    print("\tmethod PUT: {}".format(nginx.count_documents({"method": "PUT"})))
-    print("\tmethod PATCH: {}".format(nginx.count_documents({"method": "PATCH"})))
-    print("\tmethod DELETE: {}".format(nginx.count_documents({"method": "DELETE"})))
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in methods:
+        count = nginx.count_documents({"method": method})
+        print(f"\tmethod {method}: {count}")
 
     # GET /status count
-    status_check = nginx.count_documents({"method": "GET", "path": "/status"})
-    print("{} status check".format(status_check))
+    status_count = nginx.count_documents({"method": "GET", "path": "/status"})
+    print(f"{status_count} status check")
