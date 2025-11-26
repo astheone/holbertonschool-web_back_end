@@ -1,25 +1,28 @@
 #!/usr/bin/env python3
-""" 12-log_stats.py """
+"""Display summarized statistics from Nginx logs stored in MongoDB."""
 
 from pymongo import MongoClient
 
-if __name__ == "__main__":
-    client = MongoClient('mongodb://127.0.0.1:27017')
-    db = client.logs
-    nginx = db.nginx
 
-    # 1. Total logs
-    total_logs = nginx.count_documents({})
-    print(f"{total_logs} logs")
+def print_nginx_statistics(collection):
+    """ Function that prints total logs, method counts
+    and GET /status hits.
+    """
 
-    # 2. Methods
-    print("Methods:")
-    # lista metodash në rregullin e kërkuar nga checker
-    for method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
-        count = nginx.count_documents({"method": method})
-        # tab i sakte, pa hapësira ekstra
-        print(f"\tmethod {method}: {count}")
+    total = collection.count_documents({})
+    print(f"{total} logs")
+    print("Methods: ")
 
-    # 3. GET /status
-    status_count = nginx.count_documents({"method": "GET", "path": "/status"})
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in methods:
+        count = collection.count_documents({"method": method})
+        print(f"    method {method}: {count}")
+
+    status_count = collection.count_documents({"method": "GET", "path": "/status"})
     print(f"{status_count} status check")
+
+
+if __name__ == "__main__":
+    client = MongoClient("mongodb://127.0.0.1:27017")
+    nginx_coll = client.logs.nginx
+    print_nginx_statistics(nginx_coll)
