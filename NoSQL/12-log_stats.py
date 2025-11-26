@@ -8,17 +8,13 @@ if __name__ == "__main__":
     db = client.logs
     nginx = db.nginx
 
-    # Total logs
     total_logs = nginx.count_documents({})
     print("{} logs".format(total_logs))
 
-    # Methods count
     print("Methods:")
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    for method in methods:
+    for method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
         count = nginx.count_documents({"method": method})
         print("\tmethod {}: {}".format(method, count))
 
-    # GET /status
     status_check = nginx.count_documents({"method": "GET", "path": "/status"})
     print("{} status check".format(status_check))
